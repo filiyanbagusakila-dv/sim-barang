@@ -1,140 +1,221 @@
+
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SIM-Barang | Sistem Informasi Barang</title>
 
+    <!-- Menghubungkan CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <!-- Header -->
+    <!-- HEADER -->
     <header>
-        <h1>SIM-Barang</h1>
-        <p>Sistem Informasi Manajemen Barang</p>
+        <div class="header-content">
+            <h1>SIM-Barang</h1>
+            <p>Sistem Informasi Manajemen Barang</p>
+        </div>
     </header>
 
-    <!-- Navigasi -->
+    <!-- NAVIGASI -->
     <nav>
         <a href="#dashboard">Dashboard</a>
         <a href="#inventaris">Data Inventaris</a>
         <a href="#form-barang">Input Barang</a>
     </nav>
 
-    <!-- Konten Utama -->
+    <!-- KONTEN UTAMA -->
     <main>
+
+        <!-- DASHBOARD -->
         <section id="dashboard">
             <h2>Dashboard Inventaris</h2>
-            <p>Selamat datang di Sistem Informasi Manajemen Barang.</p>
+
+            <p>
+                Selamat datang di Sistem Informasi Manajemen Barang.
+                Aplikasi ini digunakan untuk mengelola data inventaris
+                barang laboratorium dan jurusan.
+            </p>
         </section>
 
-        <!-- Tabel Inventaris Barang -->
+        <!-- TABEL INVENTARIS -->
         <section id="inventaris">
+
             <h2>Tabel Inventaris Barang</h2>
 
-            <table border="1" cellpadding="8" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Kode</th>
-                        <th>Nama Barang</th>
-                        <th>Kategori</th>
-                        <th>Jumlah</th>
-                        <th>Kondisi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>BRG-001</td>
-                        <td>Laptop</td>
-                        <td>Elektronik</td>
-                        <td>10</td>
-                        <td>Baik</td>
-                    </tr>
-                    <tr>
-                        <td>BRG-002</td>
-                        <td>Proyektor</td>
-                        <td>Elektronik</td>
-                        <td>5</td>
-                        <td>Baik</td>
-                    </tr>
-                    <tr>
-                        <td>BRG-003</td>
-                        <td>Meja</td>
-                        <td>Perabot</td>
-                        <td>15</td>
-                        <td>Baik</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- PENCARIAN BARANG -->
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="cariBarang"
+                    placeholder="Cari kode atau nama barang..."
+                >
+            </div>
+
+            <!-- TABEL DATA -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Nama Barang</th>
+                            <th>Kategori</th>
+                            <th>Jumlah</th>
+                            <th>Kondisi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelBarang">
+
+                        <tr>
+                            <td>BRG-001</td>
+                            <td>Laptop</td>
+                            <td>Elektronik</td>
+                            <td>10</td>
+                            <td><span class="status baik">Baik</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>BRG-002</td>
+                            <td>Proyektor</td>
+                            <td>Elektronik</td>
+                            <td>5</td>
+                            <td><span class="status baik">Baik</span></td>
+                        </tr>
+
+                        <tr>
+                            <td>BRG-003</td>
+                            <td>Meja</td>
+                            <td>Perabot</td>
+                            <td>15</td>
+                            <td><span class="status baik">Baik</span></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <p id="pesanKosong">
+                    Data barang tidak ditemukan.
+                </p>
+            </div>
+
         </section>
 
-        <!-- Formulir Input Barang -->
+        <!-- FORMULIR INPUT BARANG -->
         <section id="form-barang">
+
             <h2>Formulir Input Barang</h2>
 
-            <form action="#" method="post">
+            <!-- NOTIFIKASI -->
+            <div
+                id="notifikasi"
+                role="status"
+                aria-live="polite"
+            ></div>
 
-                <label for="kode">Kode Barang:</label><br>
-                <input
-                    type="text"
-                    id="kode"
-                    name="kode"
-                    placeholder="Contoh: BRG-004"
-                    required
-                >
-                <br><br>
+            <form id="formInputBarang">
 
-                <label for="nama">Nama Barang:</label><br>
-                <input
-                    type="text"
-                    id="nama"
-                    name="nama"
-                    placeholder="Masukkan nama barang"
-                    required
-                >
-                <br><br>
+                <!-- KODE BARANG -->
+                <div class="form-group">
+                    <label for="kode">Kode Barang</label>
 
-                <label for="kategori">Kategori:</label><br>
-                <select id="kategori" name="kategori" required>
-                    <option value="">-- Pilih Kategori --</option>
-                    <option value="Elektronik">Elektronik</option>
-                    <option value="Perabot">Perabot</option>
-                    <option value="Alat Tulis">Alat Tulis</option>
-                </select>
-                <br><br>
+                    <input
+                        type="text"
+                        id="kode"
+                        name="kode"
+                        placeholder="Contoh: BRG-004"
+                        required
+                    >
+                </div>
 
-                <label for="jumlah">Jumlah Barang:</label><br>
-                <input
-                    type="number"
-                    id="jumlah"
-                    name="jumlah"
-                    min="1"
-                    placeholder="Masukkan jumlah barang"
-                    required
-                >
-                <br><br>
+                <!-- NAMA BARANG -->
+                <div class="form-group">
+                    <label for="nama">Nama Barang</label>
 
-                <label for="kondisi">Kondisi Barang:</label><br>
-                <select id="kondisi" name="kondisi" required>
-                    <option value="">-- Pilih Kondisi --</option>
-                    <option value="Baik">Baik</option>
-                    <option value="Rusak Ringan">Rusak Ringan</option>
-                    <option value="Rusak Berat">Rusak Berat</option>
-                </select>
-                <br><br>
+                    <input
+                        type="text"
+                        id="nama"
+                        name="nama"
+                        placeholder="Masukkan nama barang"
+                        required
+                    >
+                </div>
 
-                <button type="submit">Simpan Barang</button>
-                <button type="reset">Reset</button>
+                <!-- KATEGORI -->
+                <div class="form-group">
+                    <label for="kategori">Kategori</label>
+
+                    <select
+                        id="kategori"
+                        name="kategori"
+                        required
+                    >
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="Elektronik">Elektronik</option>
+                        <option value="Perabot">Perabot</option>
+                        <option value="Alat Tulis">Alat Tulis</option>
+                    </select>
+                </div>
+
+                <!-- JUMLAH -->
+                <div class="form-group">
+                    <label for="jumlah">Jumlah Barang</label>
+
+                    <input
+                        type="number"
+                        id="jumlah"
+                        name="jumlah"
+                        min="1"
+                        placeholder="Masukkan jumlah barang"
+                        required
+                    >
+                </div>
+
+                <!-- KONDISI -->
+                <div class="form-group">
+                    <label for="kondisi">Kondisi Barang</label>
+
+                    <select
+                        id="kondisi"
+                        name="kondisi"
+                        required
+                    >
+                        <option value="">-- Pilih Kondisi --</option>
+                        <option value="Baik">Baik</option>
+                        <option value="Rusak Ringan">Rusak Ringan</option>
+                        <option value="Rusak Berat">Rusak Berat</option>
+                    </select>
+                </div>
+
+                <!-- TOMBOL -->
+                <div class="form-button">
+                    <button type="submit" class="btn-simpan">
+                        Simpan Barang
+                    </button>
+
+                    <button type="reset" class="btn-reset">
+                        Reset
+                    </button>
+                </div>
 
             </form>
+
         </section>
+
     </main>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 SIM-Barang | Sistem Informasi Inventaris</p>
     </footer>
+
+    <!-- MENGHUBUNGKAN JAVASCRIPT -->
+    <script src="main.js"></script>
 
 </body>
 </html>

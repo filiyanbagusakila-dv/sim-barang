@@ -1,7 +1,8 @@
 
-/* =================================
+/* =====================================
    1. RESET DAN DASAR
-================================= */
+===================================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -19,32 +20,35 @@ body {
     line-height: 1.6;
 }
 
-/* =================================
+/* =====================================
    2. HEADER
-================================= */
+===================================== */
+
 header {
     background-color: #142d4e;
     color: white;
     padding: 30px 7%;
 }
 
-header h1 {
+.header-content h1 {
     font-size: 28px;
     margin-bottom: 5px;
 }
 
-header p {
+.header-content p {
     color: #cbd7e6;
     font-size: 14px;
 }
 
-/* =================================
+/* =====================================
    3. NAVIGASI
-================================= */
+===================================== */
+
 nav {
     background-color: #1e416b;
     padding: 15px 7%;
     display: flex;
+    align-items: center;
     gap: 30px;
     flex-wrap: wrap;
 }
@@ -61,9 +65,10 @@ nav a:hover {
     color: #8fc5ff;
 }
 
-/* =================================
+/* =====================================
    4. KONTEN UTAMA
-================================= */
+===================================== */
+
 main {
     max-width: 1200px;
     margin: 30px auto;
@@ -86,13 +91,41 @@ section h2 {
     border-bottom: 2px solid #e7edf5;
 }
 
-/* =================================
-   5. TABEL INVENTARIS
-================================= */
+/* =====================================
+   5. PENCARIAN BARANG
+===================================== */
+
+.search-box {
+    margin-bottom: 15px;
+}
+
+#cariBarang {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    border: 1px solid #ccd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#cariBarang:focus {
+    outline: none;
+    border-color: #2864a0;
+    box-shadow: 0 0 0 3px rgba(40, 100, 160, 0.12);
+}
+
+/* =====================================
+   6. TABEL INVENTARIS
+===================================== */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
 }
 
 th {
@@ -100,6 +133,7 @@ th {
     color: white;
     padding: 13px;
     text-align: left;
+    white-space: nowrap;
 }
 
 td {
@@ -111,27 +145,54 @@ tbody tr:hover {
     background-color: #f0f5fc;
 }
 
-/* =================================
-   6. FORMULIR INPUT BARANG
-================================= */
+/* Status kondisi barang */
+
+.status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status.baik {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* Pesan data kosong */
+
+#pesanKosong {
+    display: none;
+    padding: 20px;
+    text-align: center;
+    color: #718096;
+}
+
+/* =====================================
+   7. FORMULIR INPUT BARANG
+===================================== */
+
 form {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 20px;
 }
 
-form br {
-    display: none;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
 
-form label {
+.form-group label {
     font-weight: bold;
     color: #263449;
-    margin-top: 8px;
+    font-size: 14px;
 }
 
-form input,
-form select {
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 12px;
     border: 1px solid #ccd5e1;
@@ -140,47 +201,81 @@ form select {
     background-color: white;
 }
 
-form input:focus,
-form select:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: #2864a0;
     box-shadow: 0 0 0 3px rgba(40, 100, 160, 0.12);
 }
 
-/* =================================
-   7. TOMBOL
-================================= */
+/* =====================================
+   8. TOMBOL FORMULIR
+===================================== */
+
+.form-button {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 button {
-    padding: 12px 20px;
+    padding: 12px 22px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
-    margin-top: 10px;
     transition: 0.3s;
 }
 
-button[type="submit"] {
+.btn-simpan {
     background-color: #1e416b;
     color: white;
 }
 
-button[type="submit"]:hover {
+.btn-simpan:hover {
     background-color: #142d4e;
 }
 
-button[type="reset"] {
+.btn-reset {
     background-color: #e4eaf2;
     color: #263449;
 }
 
-button[type="reset"]:hover {
+.btn-reset:hover {
     background-color: #cbd5e1;
 }
 
-/* =================================
-   8. FOOTER
-================================= */
+/* =====================================
+   9. NOTIFIKASI
+===================================== */
+
+#notifikasi {
+    display: none;
+    padding: 13px 15px;
+    margin-bottom: 18px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#notifikasi.sukses {
+    display: block;
+    background-color: #e1f3e8;
+    color: #176b3a;
+    border: 1px solid #a5d6b5;
+}
+
+#notifikasi.error {
+    display: block;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* =====================================
+   10. FOOTER
+===================================== */
+
 footer {
     background-color: #142d4e;
     color: white;
@@ -189,28 +284,37 @@ footer {
     font-size: 14px;
 }
 
-/* =================================
-   9. TABLET (600px - 1024px)
-================================= */
-@media screen and (min-width: 600px) {
+/* =====================================
+   11. TABLET
+   600px - 1024px
+===================================== */
+
+@media screen and (min-width: 600px) and (max-width: 1024px) {
+
+    header {
+        padding: 30px 5%;
+    }
+
+    nav {
+        padding: 15px 5%;
+    }
+
     main {
-        padding: 0 35px;
+        padding: 0 25px;
     }
 
     form {
         grid-template-columns: 1fr 1fr;
-        column-gap: 20px;
-    }
-
-    form button {
-        width: fit-content;
     }
 }
 
-/* =================================
-   10. DESKTOP (DI ATAS 1024px)
-================================= */
+/* =====================================
+   12. DESKTOP
+   DI ATAS 1024px
+===================================== */
+
 @media screen and (min-width: 1025px) {
+
     header {
         padding: 35px 10%;
     }
@@ -229,15 +333,18 @@ footer {
     }
 }
 
-/* =================================
-   11. MOBILE (DI BAWAH 600px)
-================================= */
+/* =====================================
+   13. MOBILE
+   DI BAWAH 600px
+===================================== */
+
 @media screen and (max-width: 599px) {
+
     header {
         padding: 25px 20px;
     }
 
-    header h1 {
+    .header-content h1 {
         font-size: 23px;
     }
 
@@ -263,19 +370,19 @@ footer {
         font-size: 18px;
     }
 
-    #inventaris {
-        overflow-x: auto;
-    }
-
-    table {
-        min-width: 550px;
-    }
-
     form {
         grid-template-columns: 1fr;
     }
 
-    button {
+    .form-button {
+        flex-direction: column;
+    }
+
+    .form-button button {
         width: 100%;
+    }
+
+    #cariBarang {
+        max-width: 100%;
     }
 }
