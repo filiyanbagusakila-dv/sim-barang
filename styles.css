@@ -1,0 +1,281 @@
+
+/* =================================
+   1. RESET DAN DASAR
+================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f6fb;
+    color: #263449;
+    line-height: 1.6;
+}
+
+/* =================================
+   2. HEADER
+================================= */
+header {
+    background-color: #142d4e;
+    color: white;
+    padding: 30px 7%;
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+header p {
+    color: #cbd7e6;
+    font-size: 14px;
+}
+
+/* =================================
+   3. NAVIGASI
+================================= */
+nav {
+    background-color: #1e416b;
+    padding: 15px 7%;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #8fc5ff;
+}
+
+/* =================================
+   4. KONTEN UTAMA
+================================= */
+main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 25px;
+}
+
+section {
+    background-color: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+section h2 {
+    color: #142d4e;
+    font-size: 21px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e7edf5;
+}
+
+/* =================================
+   5. TABEL INVENTARIS
+================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th {
+    background-color: #1e416b;
+    color: white;
+    padding: 13px;
+    text-align: left;
+}
+
+td {
+    padding: 13px;
+    border-bottom: 1px solid #e5eaf0;
+}
+
+tbody tr:hover {
+    background-color: #f0f5fc;
+}
+
+/* =================================
+   6. FORMULIR INPUT BARANG
+================================= */
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+form br {
+    display: none;
+}
+
+form label {
+    font-weight: bold;
+    color: #263449;
+    margin-top: 8px;
+}
+
+form input,
+form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+}
+
+form input:focus,
+form select:focus {
+    outline: none;
+    border-color: #2864a0;
+    box-shadow: 0 0 0 3px rgba(40, 100, 160, 0.12);
+}
+
+/* =================================
+   7. TOMBOL
+================================= */
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+button[type="submit"] {
+    background-color: #1e416b;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #142d4e;
+}
+
+button[type="reset"] {
+    background-color: #e4eaf2;
+    color: #263449;
+}
+
+button[type="reset"]:hover {
+    background-color: #cbd5e1;
+}
+
+/* =================================
+   8. FOOTER
+================================= */
+footer {
+    background-color: #142d4e;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+}
+
+/* =================================
+   9. TABLET (600px - 1024px)
+================================= */
+@media screen and (min-width: 600px) {
+    main {
+        padding: 0 35px;
+    }
+
+    form {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 20px;
+    }
+
+    form button {
+        width: fit-content;
+    }
+}
+
+/* =================================
+   10. DESKTOP (DI ATAS 1024px)
+================================= */
+@media screen and (min-width: 1025px) {
+    header {
+        padding: 35px 10%;
+    }
+
+    nav {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    main {
+        max-width: 1200px;
+    }
+
+    section {
+        padding: 30px;
+    }
+}
+
+/* =================================
+   11. MOBILE (DI BAWAH 600px)
+================================= */
+@media screen and (max-width: 599px) {
+    header {
+        padding: 25px 20px;
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+    nav {
+        padding: 15px 20px;
+        gap: 15px;
+    }
+
+    nav a {
+        font-size: 13px;
+    }
+
+    main {
+        padding: 0 15px;
+        margin: 20px auto;
+    }
+
+    section {
+        padding: 18px;
+    }
+
+    section h2 {
+        font-size: 18px;
+    }
+
+    #inventaris {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 550px;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        width: 100%;
+    }
+}
