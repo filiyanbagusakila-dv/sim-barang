@@ -145,7 +145,9 @@ tbody tr:hover {
     background-color: #f0f5fc;
 }
 
-/* Status kondisi barang */
+/* =====================================
+   7. STATUS BARANG
+===================================== */
 
 .status {
     display: inline-block;
@@ -160,7 +162,9 @@ tbody tr:hover {
     color: #166534;
 }
 
-/* Pesan data kosong */
+/* =====================================
+   8. PESAN PENCARIAN KOSONG
+===================================== */
 
 #pesanKosong {
     display: none;
@@ -170,7 +174,7 @@ tbody tr:hover {
 }
 
 /* =====================================
-   7. FORMULIR INPUT BARANG
+   9. FORMULIR INPUT
 ===================================== */
 
 form {
@@ -209,7 +213,7 @@ form {
 }
 
 /* =====================================
-   8. TOMBOL FORMULIR
+   10. TOMBOL FORMULIR
 ===================================== */
 
 .form-button {
@@ -247,7 +251,7 @@ button {
 }
 
 /* =====================================
-   9. NOTIFIKASI
+   11. NOTIFIKASI JAVASCRIPT
 ===================================== */
 
 #notifikasi {
@@ -273,7 +277,57 @@ button {
 }
 
 /* =====================================
-   10. FOOTER
+   12. NOTIFIKASI PHP
+===================================== */
+
+.pesan-sukses {
+    padding: 13px;
+    margin-bottom: 15px;
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #a5d6b5;
+    border-radius: 6px;
+}
+
+.pesan-error {
+    padding: 13px;
+    margin-bottom: 15px;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+}
+
+/* =====================================
+   13. TOTAL ESTIMASI ASET
+===================================== */
+
+.total-aset {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #edf4fc;
+    border-left: 5px solid #1e416b;
+    border-radius: 6px;
+}
+
+.total-aset p {
+    color: #52647b;
+    font-size: 14px;
+}
+
+.total-aset h3 {
+    color: #142d4e;
+    font-size: 25px;
+    margin-top: 5px;
+}
+
+.belum-ada-data {
+    color: #718096;
+    font-size: 14px;
+}
+
+/* =====================================
+   14. FOOTER
 ===================================== */
 
 footer {
@@ -285,7 +339,7 @@ footer {
 }
 
 /* =====================================
-   11. TABLET
+   15. TABLET
    600px - 1024px
 ===================================== */
 
@@ -309,7 +363,7 @@ footer {
 }
 
 /* =====================================
-   12. DESKTOP
+   16. DESKTOP
    DI ATAS 1024px
 ===================================== */
 
@@ -334,7 +388,7 @@ footer {
 }
 
 /* =====================================
-   13. MOBILE
+   17. MOBILE
    DI BAWAH 600px
 ===================================== */
 
@@ -384,5 +438,9 @@ footer {
 
     #cariBarang {
         max-width: 100%;
+    }
+
+    .total-aset h3 {
+        font-size: 21px;
     }
 }

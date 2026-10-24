@@ -1,7 +1,13 @@
 
-// =====================================
+// =============================================
+// SIM-BARANG
+// PERTEMUAN 4 DAN 5 - JAVASCRIPT
+// =============================================
+
+
+// =============================================
 // 1. MENGAMBIL ELEMEN HTML
-// =====================================
+// =============================================
 
 const formBarang = document.getElementById("formInputBarang");
 
@@ -9,14 +15,15 @@ const inputKode = document.getElementById("kode");
 const inputNama = document.getElementById("nama");
 const inputKategori = document.getElementById("kategori");
 const inputJumlah = document.getElementById("jumlah");
+const inputHarga = document.getElementById("harga");
 const inputKondisi = document.getElementById("kondisi");
 
 const notifikasi = document.getElementById("notifikasi");
 
 
-// =====================================
-// 2. FUNGSI MENAMPILKAN NOTIFIKASI
-// =====================================
+// =============================================
+// 2. FUNGSI NOTIFIKASI
+// =============================================
 
 let waktuNotifikasi;
 
@@ -36,42 +43,44 @@ function tampilkanNotifikasi(pesan, jenis) {
         notifikasi.textContent = "";
         notifikasi.className = "";
 
-    }, 3000);
+    }, 4000);
 }
 
 
-// =====================================
-// 3. VALIDASI FORMULIR BARANG
-// =====================================
+// =============================================
+// 3. VALIDASI FORMULIR
+// =============================================
 
 formBarang.addEventListener("submit", function(event) {
 
-    // Mencegah halaman melakukan reload
-    event.preventDefault();
-
-    // Mengambil nilai input
     const kode = inputKode.value.trim();
     const nama = inputNama.value.trim();
     const kategori = inputKategori.value;
     const jumlah = inputJumlah.value;
+    const harga = inputHarga.value;
     const kondisi = inputKondisi.value;
 
-    // Validasi format kode barang
+    // Validasi kode barang
     const polaKode = /^BRG-\d+$/;
 
     if (!polaKode.test(kode)) {
 
+        event.preventDefault();
+
         tampilkanNotifikasi(
-            "Kode barang harus diawali BRG- dan diikuti angka. Contoh: BRG-001.",
+            "Kode barang harus menggunakan format BRG-001!",
             "error"
         );
 
         inputKode.focus();
+
         return;
     }
 
     // Validasi nama barang
     if (nama === "") {
+
+        event.preventDefault();
 
         tampilkanNotifikasi(
             "Nama barang tidak boleh kosong!",
@@ -79,11 +88,14 @@ formBarang.addEventListener("submit", function(event) {
         );
 
         inputNama.focus();
+
         return;
     }
 
     // Validasi kategori
     if (kategori === "") {
+
+        event.preventDefault();
 
         tampilkanNotifikasi(
             "Silakan pilih kategori barang!",
@@ -91,6 +103,7 @@ formBarang.addEventListener("submit", function(event) {
         );
 
         inputKategori.focus();
+
         return;
     }
 
@@ -98,20 +111,45 @@ formBarang.addEventListener("submit", function(event) {
     if (
         jumlah === "" ||
         !Number.isFinite(Number(jumlah)) ||
-        Number(jumlah) <= 0
+        Number(jumlah) <= 0 ||
+        !Number.isInteger(Number(jumlah))
     ) {
 
+        event.preventDefault();
+
         tampilkanNotifikasi(
-            "Jumlah barang harus berupa angka positif lebih dari 0!",
+            "Jumlah barang harus berupa bilangan bulat positif!",
             "error"
         );
 
         inputJumlah.focus();
+
         return;
     }
 
-    // Validasi kondisi barang
+    // Validasi harga satuan
+    if (
+        harga === "" ||
+        !Number.isFinite(Number(harga)) ||
+        Number(harga) < 0
+    ) {
+
+        event.preventDefault();
+
+        tampilkanNotifikasi(
+            "Harga satuan harus berupa angka nol atau lebih!",
+            "error"
+        );
+
+        inputHarga.focus();
+
+        return;
+    }
+
+    // Validasi kondisi
     if (kondisi === "") {
+
+        event.preventDefault();
 
         tampilkanNotifikasi(
             "Silakan pilih kondisi barang!",
@@ -119,24 +157,19 @@ formBarang.addEventListener("submit", function(event) {
         );
 
         inputKondisi.focus();
+
         return;
     }
 
-    // Jika seluruh validasi berhasil
-    tampilkanNotifikasi(
-        "Formulir berhasil divalidasi! Data siap diproses.",
-        "sukses"
-    );
-
-    // Mengosongkan formulir
-    formBarang.reset();
+    // Jika validasi berhasil, formulir diteruskan ke PHP.
+    // Tidak menggunakan preventDefault() di sini.
 
 });
 
 
-// =====================================
+// =============================================
 // 4. PENCARIAN DATA INVENTARIS
-// =====================================
+// =============================================
 
 const cariBarang = document.getElementById("cariBarang");
 
@@ -146,20 +179,16 @@ const pesanKosong = document.getElementById("pesanKosong");
 
 cariBarang.addEventListener("input", function() {
 
-    // Mengambil kata yang dicari
     const kataKunci = cariBarang.value.toLowerCase().trim();
 
-    // Mengambil seluruh baris tabel
     const barisBarang = tabelBarang.querySelectorAll("tr");
 
     let jumlahDitemukan = 0;
 
     barisBarang.forEach(function(baris) {
 
-        // Mengambil isi setiap baris
         const isiBaris = baris.textContent.toLowerCase();
 
-        // Memeriksa apakah data cocok dengan pencarian
         if (isiBaris.includes(kataKunci)) {
 
             baris.style.display = "";
@@ -187,14 +216,18 @@ cariBarang.addEventListener("input", function() {
 });
 
 
-// =====================================
-// 5. RESET NOTIFIKASI
-// =====================================
+// =============================================
+// 5. RESET FORMULIR
+// =============================================
 
 formBarang.addEventListener("reset", function() {
 
+    clearTimeout(waktuNotifikasi);
+
     notifikasi.style.display = "none";
+
     notifikasi.textContent = "";
+
     notifikasi.className = "";
 
 });
