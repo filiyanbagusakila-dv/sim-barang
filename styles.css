@@ -444,3 +444,191 @@ footer {
         font-size: 21px;
     }
 }
+
+/* =====================================
+   PERTEMUAN 6 - LOGIN
+===================================== */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #142d4e, #2864a0);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 430px;
+}
+
+.login-header {
+    text-align: center;
+    color: white;
+    margin-bottom: 25px;
+}
+
+.login-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.login-header h1 {
+    font-size: 30px;
+}
+
+.login-header p {
+    color: #d7e5f5;
+    font-size: 14px;
+}
+
+.login-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.login-card h2 {
+    color: #142d4e;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    color: #718096;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-login {
+    width: 100%;
+    background-color: #1e416b;
+    color: white;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    background-color: #142d4e;
+}
+
+.login-demo {
+    background-color: #edf4fc;
+    border-radius: 7px;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #263449;
+}
+
+.login-demo p {
+    margin-top: 4px;
+}
+
+.login-footer {
+    text-align: center;
+    color: #d7e5f5;
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+/* =====================================
+   PERTEMUAN 6 - USER HEADER
+===================================== */
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-detail {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.user-detail strong {
+    color: white;
+    font-size: 14px;
+}
+
+.user-detail span {
+    color: #cbd7e6;
+    font-size: 12px;
+}
+
+.btn-logout {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #dc5353;
+    color: white;
+    padding: 9px 17px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: #b92f2f;
+}
+
+/* =====================================
+   PERTEMUAN 6 - OOP BARANG
+===================================== */
+
+.info-barang {
+    margin-top: 20px;
+    background-color: #edf4fc;
+    padding: 20px;
+    border-left: 5px solid #1e416b;
+    border-radius: 7px;
+}
+
+.info-barang h3 {
+    color: #142d4e;
+    margin-bottom: 10px;
+}
+
+.info-barang p {
+    margin-bottom: 5px;
+}
+
+/* =====================================
+   RESPONSIVE LOGIN DAN HEADER
+===================================== */
+
+@media screen and (max-width: 599px) {
+
+    .login-card {
+        padding: 22px;
+    }
+
+    .header-content {
+        align-items: flex-start;
+    }
+
+    .user-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .user-detail {
+        text-align: left;
+    }
+
+}

@@ -1,22 +1,35 @@
-
 <?php
 // =============================================
 // SIM-BARANG
-// PERTEMUAN 5 - PENGOLAHAN FORMULIR PHP
+// PERTEMUAN 5 + 6
+// PHP, SESSION, DAN OOP
 // =============================================
 
-// Variabel untuk menyimpan hasil pemrosesan
+session_start();
+
+// Melindungi halaman agar hanya bisa dibuka setelah login
+if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
+    header("Location: login.php");
+    exit;
+}
+
+// Memanggil class Barang
+require_once "Barang.php";
+
+// Membuat objek Barang
+$barangOOP = new Barang("BRG-001", "Laptop", 10);
+
+// Variabel hasil pemrosesan
 $hasilInput = null;
 $pesanError = "";
 
 // =============================================
-// 1. MEMPROSES FORMULIR DENGAN METHOD POST
+// 1. MEMPROSES FORMULIR
 // =============================================
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Mengambil data dari formulir
-    $kode = trim($_POST["kode"] ?? "");
+    $kode = strtoupper(trim($_POST["kode"] ?? ""));
     $nama = trim($_POST["nama"] ?? "");
     $kategori = trim($_POST["kategori"] ?? "");
     $jumlah = $_POST["jumlah"] ?? "";
@@ -24,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $kondisi = trim($_POST["kondisi"] ?? "");
 
     // =============================================
-    // 2. VALIDASI DATA DI SISI SERVER
+    // 2. VALIDASI DATA
     // =============================================
 
     if (!preg_match('/^BRG-\d+$/', $kode)) {
@@ -73,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
 
         // =============================================
-        // 3. PERHITUNGAN ESTIMASI NILAI ASET
+        // 3. PERHITUNGAN NILAI ASET
         // =============================================
 
         $jumlahBarang = (int)$jumlah;
@@ -81,10 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $totalNilai = $jumlahBarang * $hargaSatuan;
 
-        // =============================================
-        // 4. MENYIMPAN HASIL SEMENTARA
-        // =============================================
-
+        // Menyimpan hasil sementara
         $hasilInput = [
             "kode" => $kode,
             "nama" => $nama,
@@ -98,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 // =============================================
-// 5. FUNGSI MENGAMANKAN OUTPUT HTML
+// 4. FUNGSI MENGAMANKAN OUTPUT
 // =============================================
 
 function aman($data) {
@@ -129,42 +139,55 @@ function rupiah($angka) {
 
     <title>SIM-Barang | Sistem Informasi Barang</title>
 
-    <!-- CSS Eksternal -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =================================
-         HEADER
-    ================================== -->
-
+    <!-- HEADER -->
     <header>
         <div class="header-content">
-            <h1>SIM-Barang</h1>
-            <p>Sistem Informasi Manajemen Barang</p>
+
+            <div>
+                <h1>SIM-Barang</h1>
+                <p>Sistem Informasi Manajemen Barang</p>
+            </div>
+
+            <!-- INFORMASI PENGGUNA -->
+            <div class="user-info">
+
+                <div class="user-detail">
+                    <strong>
+                        <?= aman($_SESSION["nama"] ?? $_SESSION["username"] ?? "Pengguna") ?>
+                    </strong>
+
+                    <span>
+                        <?= aman($_SESSION["role"] ?? "User") ?>
+                    </span>
+                </div>
+
+                <a href="logout.php" class="btn-logout">
+                    Logout
+                </a>
+
+            </div>
+
         </div>
     </header>
 
-    <!-- =================================
-         NAVIGASI
-    ================================== -->
-
+    <!-- NAVIGASI -->
     <nav>
         <a href="#dashboard">Dashboard</a>
         <a href="#inventaris">Data Inventaris</a>
+        <a href="#oop-barang">OOP Barang</a>
         <a href="#form-barang">Input Barang</a>
         <a href="#hasil-pemrosesan">Hasil Pemrosesan</a>
     </nav>
 
-    <!-- =================================
-         KONTEN UTAMA
-    ================================== -->
-
+    <!-- KONTEN UTAMA -->
     <main>
 
         <!-- DASHBOARD -->
-
         <section id="dashboard">
 
             <h2>Dashboard Inventaris</h2>
@@ -177,16 +200,26 @@ function rupiah($angka) {
 
         </section>
 
-        <!-- =================================
-             TABEL INVENTARIS
-        ================================== -->
+        <!-- PENERAPAN OOP -->
+        <section id="oop-barang">
 
+            <h2>Penerapan OOP - Class Barang</h2>
+
+            <p>
+                Bagian ini menunjukkan penggunaan class dan object
+                pada sistem informasi inventaris SIM-Barang.
+            </p>
+
+            <?= $barangOOP->tampilkanInformasi(); ?>
+
+        </section>
+
+        <!-- TABEL INVENTARIS -->
         <section id="inventaris">
 
             <h2>Tabel Inventaris Barang</h2>
 
             <!-- PENCARIAN -->
-
             <div class="search-box">
 
                 <input
@@ -198,7 +231,6 @@ function rupiah($angka) {
             </div>
 
             <!-- TABEL -->
-
             <div class="table-container">
 
                 <table>
@@ -257,16 +289,12 @@ function rupiah($angka) {
 
         </section>
 
-        <!-- =================================
-             FORM INPUT BARANG
-        ================================== -->
-
+        <!-- FORM INPUT BARANG -->
         <section id="form-barang">
 
             <h2>Formulir Input Barang</h2>
 
             <!-- NOTIFIKASI JAVASCRIPT -->
-
             <div
                 id="notifikasi"
                 role="status"
@@ -274,7 +302,6 @@ function rupiah($angka) {
             ></div>
 
             <!-- NOTIFIKASI ERROR PHP -->
-
             <?php if ($pesanError !== ""): ?>
 
                 <div class="pesan-error" role="alert">
@@ -284,14 +311,11 @@ function rupiah($angka) {
             <?php endif; ?>
 
             <!-- FORMULIR -->
-
             <form
                 id="formInputBarang"
                 action="index.php#hasil-pemrosesan"
                 method="POST"
             >
-
-                <!-- KODE BARANG -->
 
                 <div class="form-group">
 
@@ -310,8 +334,6 @@ function rupiah($angka) {
 
                 </div>
 
-                <!-- NAMA BARANG -->
-
                 <div class="form-group">
 
                     <label for="nama">Nama Barang</label>
@@ -327,17 +349,11 @@ function rupiah($angka) {
 
                 </div>
 
-                <!-- KATEGORI -->
-
                 <div class="form-group">
 
                     <label for="kategori">Kategori</label>
 
-                    <select
-                        id="kategori"
-                        name="kategori"
-                        required
-                    >
+                    <select id="kategori" name="kategori" required>
 
                         <option value="">-- Pilih Kategori --</option>
 
@@ -360,8 +376,6 @@ function rupiah($angka) {
 
                 </div>
 
-                <!-- JUMLAH BARANG -->
-
                 <div class="form-group">
 
                     <label for="jumlah">Jumlah Barang</label>
@@ -378,8 +392,6 @@ function rupiah($angka) {
                     >
 
                 </div>
-
-                <!-- HARGA SATUAN -->
 
                 <div class="form-group">
 
@@ -398,17 +410,11 @@ function rupiah($angka) {
 
                 </div>
 
-                <!-- KONDISI BARANG -->
-
                 <div class="form-group">
 
                     <label for="kondisi">Kondisi Barang</label>
 
-                    <select
-                        id="kondisi"
-                        name="kondisi"
-                        required
-                    >
+                    <select id="kondisi" name="kondisi" required>
 
                         <option value="">-- Pilih Kondisi --</option>
 
@@ -432,20 +438,13 @@ function rupiah($angka) {
                 </div>
 
                 <!-- TOMBOL -->
-
                 <div class="form-button">
 
-                    <button
-                        type="submit"
-                        class="btn-simpan"
-                    >
+                    <button type="submit" class="btn-simpan">
                         Simpan Barang
                     </button>
 
-                    <button
-                        type="reset"
-                        class="btn-reset"
-                    >
+                    <button type="reset" class="btn-reset">
                         Reset
                     </button>
 
@@ -455,10 +454,7 @@ function rupiah($angka) {
 
         </section>
 
-        <!-- =================================
-             HASIL PEMROSESAN PHP
-        ================================== -->
-
+        <!-- HASIL PEMROSESAN PHP -->
         <section id="hasil-pemrosesan">
 
             <h2>Ringkasan Pemrosesan Barang</h2>
@@ -488,37 +484,17 @@ function rupiah($angka) {
                         <tbody>
 
                             <tr>
-
-                                <td>
-                                    <?= aman($hasilInput["kode"]) ?>
-                                </td>
-
-                                <td>
-                                    <?= aman($hasilInput["nama"]) ?>
-                                </td>
-
-                                <td>
-                                    <?= aman($hasilInput["kategori"]) ?>
-                                </td>
-
-                                <td>
-                                    <?= aman($hasilInput["jumlah"]) ?>
-                                </td>
-
-                                <td>
-                                    <?= rupiah($hasilInput["harga"]) ?>
-                                </td>
-
-                                <td>
-                                    <?= aman($hasilInput["kondisi"]) ?>
-                                </td>
-
+                                <td><?= aman($hasilInput["kode"]) ?></td>
+                                <td><?= aman($hasilInput["nama"]) ?></td>
+                                <td><?= aman($hasilInput["kategori"]) ?></td>
+                                <td><?= aman($hasilInput["jumlah"]) ?></td>
+                                <td><?= rupiah($hasilInput["harga"]) ?></td>
+                                <td><?= aman($hasilInput["kondisi"]) ?></td>
                                 <td>
                                     <strong>
                                         <?= rupiah($hasilInput["total"]) ?>
                                     </strong>
                                 </td>
-
                             </tr>
 
                         </tbody>
@@ -528,7 +504,6 @@ function rupiah($angka) {
                 </div>
 
                 <!-- TOTAL NILAI ASET -->
-
                 <div class="total-aset">
 
                     <p>Total Estimasi Nilai Aset</p>
@@ -552,10 +527,7 @@ function rupiah($angka) {
 
     </main>
 
-    <!-- =================================
-         FOOTER
-    ================================== -->
-
+    <!-- FOOTER -->
     <footer>
 
         <p>
@@ -566,7 +538,6 @@ function rupiah($angka) {
     </footer>
 
     <!-- JAVASCRIPT EKSTERNAL -->
-
     <script src="main.js"></script>
 
 </body>
