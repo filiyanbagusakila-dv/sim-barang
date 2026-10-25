@@ -1,544 +1,206 @@
 <?php
-// =============================================
-// SIM-BARANG
-// PERTEMUAN 5 + 6
-// PHP, SESSION, DAN OOP
-// =============================================
-
 session_start();
 
 // Melindungi halaman agar hanya bisa dibuka setelah login
-if (!isset($_SESSION["login"]) || $_SESSION["login"] !== true) {
+if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
 }
 
-// Memanggil class Barang
+require_once "koneksi.php";
 require_once "Barang.php";
 
-// Membuat objek Barang
-$barangOOP = new Barang("BRG-001", "Laptop", 10);
-
-// Variabel hasil pemrosesan
-$hasilInput = null;
-$pesanError = "";
-
-// =============================================
-// 1. MEMPROSES FORMULIR
-// =============================================
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    $kode = strtoupper(trim($_POST["kode"] ?? ""));
-    $nama = trim($_POST["nama"] ?? "");
-    $kategori = trim($_POST["kategori"] ?? "");
-    $jumlah = $_POST["jumlah"] ?? "";
-    $harga = $_POST["harga"] ?? "";
-    $kondisi = trim($_POST["kondisi"] ?? "");
-
-    // =============================================
-    // 2. VALIDASI DATA
-    // =============================================
-
-    if (!preg_match('/^BRG-\d+$/', $kode)) {
-
-        $pesanError = "Kode barang harus menggunakan format BRG-001.";
-
-    } elseif ($nama === "") {
-
-        $pesanError = "Nama barang wajib diisi.";
-
-    } elseif (!in_array($kategori, [
-        "Elektronik",
-        "Perabot",
-        "Alat Tulis"
-    ], true)) {
-
-        $pesanError = "Kategori barang tidak valid.";
-
-    } elseif (
-        $jumlah === "" ||
-        !is_numeric($jumlah) ||
-        !is_finite((float)$jumlah) ||
-        (float)$jumlah <= 0 ||
-        floor((float)$jumlah) != (float)$jumlah
-    ) {
-
-        $pesanError = "Jumlah barang harus berupa bilangan bulat positif.";
-
-    } elseif (
-        $harga === "" ||
-        !is_numeric($harga) ||
-        !is_finite((float)$harga) ||
-        (float)$harga < 0
-    ) {
-
-        $pesanError = "Harga satuan harus berupa angka nol atau lebih.";
-
-    } elseif (!in_array($kondisi, [
-        "Baik",
-        "Rusak Ringan",
-        "Rusak Berat"
-    ], true)) {
-
-        $pesanError = "Kondisi barang tidak valid.";
-
-    } else {
-
-        // =============================================
-        // 3. PERHITUNGAN NILAI ASET
-        // =============================================
-
-        $jumlahBarang = (int)$jumlah;
-        $hargaSatuan = (float)$harga;
-
-        $totalNilai = $jumlahBarang * $hargaSatuan;
-
-        // Menyimpan hasil sementara
-        $hasilInput = [
-            "kode" => $kode,
-            "nama" => $nama,
-            "kategori" => $kategori,
-            "jumlah" => $jumlahBarang,
-            "harga" => $hargaSatuan,
-            "kondisi" => $kondisi,
-            "total" => $totalNilai
-        ];
-    }
-}
-
-// =============================================
-// 4. FUNGSI MENGAMANKAN OUTPUT
-// =============================================
-
+// Fungsi untuk mengamankan output
 function aman($data) {
-    return htmlspecialchars(
-        (string)$data,
-        ENT_QUOTES,
-        "UTF-8"
-    );
+    return htmlspecialchars((string)$data, ENT_QUOTES, "UTF-8");
 }
 
 // Fungsi format rupiah
 function rupiah($angka) {
-    return "Rp " . number_format(
-        (float)$angka,
-        0,
-        ",",
-        "."
-    );
+    return "Rp " . number_format((float)$angka, 0, ",", ".");
 }
+
+// Mengambil data barang dari database
+$query = $koneksi->prepare("
+    SELECT 
+        barang.id_barang,
+        barang.kode_barang,
+        barang.nama_barang,
+        barang.jumlah,
+        barang.kondisi,
+        barang.harga_satuan,
+        kategori.nama_kategori
+    FROM barang
+    LEFT JOIN kategori 
+        ON barang.id_kategori = kategori.id_kategori
+    ORDER BY barang.id_barang ASC
+");
+
+$query->execute();
+$dataBarang = $query->fetchAll();
+
+// Menghitung total data
+$totalJenis = count($dataBarang);
+$totalStok = 0;
+$totalAset = 0;
+$barangBaik = 0;
+
+foreach ($dataBarang as $barang) {
+    $totalStok += (int)$barang["jumlah"];
+    $totalAset += (int)$barang["jumlah"] * (float)$barang["harga_satuan"];
+
+    if ($barang["kondisi"] === "Baik") {
+        $barangBaik++;
+    }
+}
+
+// Membuat objek dari class Barang untuk contoh OOP
+$objekBarang = new Barang("BRG-001", "Contoh Barang", 10);
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SIM-Barang | Sistem Informasi Barang</title>
+    <title>SIM-Barang | Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="header-content">
+<header>
+    <h1>SIM-Barang</h1>
+    <p>Sistem Informasi Manajemen Barang</p>
+</header>
 
-            <div>
-                <h1>SIM-Barang</h1>
-                <p>Sistem Informasi Manajemen Barang</p>
+<nav>
+    <a href="index.php">Dashboard</a>
+    <a href="#data-barang">Data Barang</a>
+    <a href="logout.php">Logout</a>
+</nav>
+
+<main>
+
+    <section class="welcome">
+        <h2>Selamat Datang, <?= aman($_SESSION["nama"] ?? $_SESSION["username"] ?? "Pengguna"); ?>!</h2>
+        <p>Anda login sebagai: <?= aman($_SESSION["role"] ?? "User"); ?></p>
+    </section>
+
+    <section class="dashboard">
+        <h2>Dashboard Inventaris</h2>
+
+        <div class="dashboard-container">
+
+            <div class="dashboard-card">
+                <h3>Total Jenis Barang</h3>
+                <p><?= $totalJenis; ?></p>
             </div>
 
-            <!-- INFORMASI PENGGUNA -->
-            <div class="user-info">
+            <div class="dashboard-card">
+                <h3>Total Stok Barang</h3>
+                <p><?= $totalStok; ?></p>
+            </div>
 
-                <div class="user-detail">
-                    <strong>
-                        <?= aman($_SESSION["nama"] ?? $_SESSION["username"] ?? "Pengguna") ?>
-                    </strong>
+            <div class="dashboard-card">
+                <h3>Barang Kondisi Baik</h3>
+                <p><?= $barangBaik; ?></p>
+            </div>
 
-                    <span>
-                        <?= aman($_SESSION["role"] ?? "User") ?>
-                    </span>
-                </div>
-
-                <a href="logout.php" class="btn-logout">
-                    Logout
-                </a>
-
+            <div class="dashboard-card">
+                <h3>Estimasi Nilai Aset</h3>
+                <p><?= rupiah($totalAset); ?></p>
             </div>
 
         </div>
-    </header>
-
-    <!-- NAVIGASI -->
-    <nav>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#inventaris">Data Inventaris</a>
-        <a href="#oop-barang">OOP Barang</a>
-        <a href="#form-barang">Input Barang</a>
-        <a href="#hasil-pemrosesan">Hasil Pemrosesan</a>
-    </nav>
-
-    <!-- KONTEN UTAMA -->
-    <main>
-
-        <!-- DASHBOARD -->
-        <section id="dashboard">
-
-            <h2>Dashboard Inventaris</h2>
-
-            <p>
-                Selamat datang di Sistem Informasi Manajemen Barang.
-                Aplikasi ini digunakan untuk mengelola data inventaris
-                barang laboratorium dan jurusan.
-            </p>
-
-        </section>
-
-        <!-- PENERAPAN OOP -->
-        <section id="oop-barang">
-
-            <h2>Penerapan OOP - Class Barang</h2>
-
-            <p>
-                Bagian ini menunjukkan penggunaan class dan object
-                pada sistem informasi inventaris SIM-Barang.
-            </p>
-
-            <?= $barangOOP->tampilkanInformasi(); ?>
-
-        </section>
-
-        <!-- TABEL INVENTARIS -->
-        <section id="inventaris">
-
-            <h2>Tabel Inventaris Barang</h2>
-
-            <!-- PENCARIAN -->
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    id="cariBarang"
-                    placeholder="Cari kode atau nama barang..."
-                >
-
-            </div>
-
-            <!-- TABEL -->
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Kode</th>
-                            <th>Nama Barang</th>
-                            <th>Kategori</th>
-                            <th>Jumlah</th>
-                            <th>Kondisi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="tabelBarang">
-
-                        <tr>
-                            <td>BRG-001</td>
-                            <td>Laptop</td>
-                            <td>Elektronik</td>
-                            <td>10</td>
-                            <td>
-                                <span class="status baik">Baik</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>BRG-002</td>
-                            <td>Proyektor</td>
-                            <td>Elektronik</td>
-                            <td>5</td>
-                            <td>
-                                <span class="status baik">Baik</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>BRG-003</td>
-                            <td>Meja</td>
-                            <td>Perabot</td>
-                            <td>15</td>
-                            <td>
-                                <span class="status baik">Baik</span>
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-                <p id="pesanKosong">
-                    Data barang tidak ditemukan.
-                </p>
-
-            </div>
-
-        </section>
-
-        <!-- FORM INPUT BARANG -->
-        <section id="form-barang">
-
-            <h2>Formulir Input Barang</h2>
-
-            <!-- NOTIFIKASI JAVASCRIPT -->
-            <div
-                id="notifikasi"
-                role="status"
-                aria-live="polite"
-            ></div>
-
-            <!-- NOTIFIKASI ERROR PHP -->
-            <?php if ($pesanError !== ""): ?>
-
-                <div class="pesan-error" role="alert">
-                    <?= aman($pesanError) ?>
-                </div>
-
-            <?php endif; ?>
-
-            <!-- FORMULIR -->
-            <form
-                id="formInputBarang"
-                action="index.php#hasil-pemrosesan"
-                method="POST"
-            >
-
-                <div class="form-group">
-
-                    <label for="kode">Kode Barang</label>
-
-                    <input
-                        type="text"
-                        id="kode"
-                        name="kode"
-                        placeholder="Contoh: BRG-004"
-                        pattern="BRG-[0-9]+"
-                        title="Gunakan format BRG-001"
-                        value="<?= isset($kode) ? aman($kode) : '' ?>"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="nama">Nama Barang</label>
-
-                    <input
-                        type="text"
-                        id="nama"
-                        name="nama"
-                        placeholder="Masukkan nama barang"
-                        value="<?= isset($nama) ? aman($nama) : '' ?>"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="kategori">Kategori</label>
-
-                    <select id="kategori" name="kategori" required>
-
-                        <option value="">-- Pilih Kategori --</option>
-
-                        <option value="Elektronik"
-                            <?= (isset($kategori) && $kategori === "Elektronik") ? "selected" : "" ?>>
-                            Elektronik
-                        </option>
-
-                        <option value="Perabot"
-                            <?= (isset($kategori) && $kategori === "Perabot") ? "selected" : "" ?>>
-                            Perabot
-                        </option>
-
-                        <option value="Alat Tulis"
-                            <?= (isset($kategori) && $kategori === "Alat Tulis") ? "selected" : "" ?>>
-                            Alat Tulis
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="jumlah">Jumlah Barang</label>
-
-                    <input
-                        type="number"
-                        id="jumlah"
-                        name="jumlah"
-                        min="1"
-                        step="1"
-                        placeholder="Masukkan jumlah barang"
-                        value="<?= isset($jumlah) ? aman($jumlah) : '' ?>"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="harga">Harga Satuan (Rp)</label>
-
-                    <input
-                        type="number"
-                        id="harga"
-                        name="harga"
-                        min="0"
-                        step="any"
-                        placeholder="Contoh: 150000"
-                        value="<?= isset($harga) ? aman($harga) : '' ?>"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="kondisi">Kondisi Barang</label>
-
-                    <select id="kondisi" name="kondisi" required>
-
-                        <option value="">-- Pilih Kondisi --</option>
-
-                        <option value="Baik"
-                            <?= (isset($kondisi) && $kondisi === "Baik") ? "selected" : "" ?>>
-                            Baik
-                        </option>
-
-                        <option value="Rusak Ringan"
-                            <?= (isset($kondisi) && $kondisi === "Rusak Ringan") ? "selected" : "" ?>>
-                            Rusak Ringan
-                        </option>
-
-                        <option value="Rusak Berat"
-                            <?= (isset($kondisi) && $kondisi === "Rusak Berat") ? "selected" : "" ?>>
-                            Rusak Berat
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <!-- TOMBOL -->
-                <div class="form-button">
-
-                    <button type="submit" class="btn-simpan">
-                        Simpan Barang
-                    </button>
-
-                    <button type="reset" class="btn-reset">
-                        Reset
-                    </button>
-
-                </div>
-
-            </form>
-
-        </section>
-
-        <!-- HASIL PEMROSESAN PHP -->
-        <section id="hasil-pemrosesan">
-
-            <h2>Ringkasan Pemrosesan Barang</h2>
-
-            <?php if ($hasilInput !== null): ?>
-
-                <div class="pesan-sukses">
-                    Data barang berhasil diproses oleh PHP!
-                </div>
-
-                <div class="table-container">
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Kode</th>
-                                <th>Nama Barang</th>
-                                <th>Kategori</th>
-                                <th>Jumlah</th>
-                                <th>Harga Satuan</th>
-                                <th>Kondisi</th>
-                                <th>Total Nilai</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
+    </section>
+
+    <section id="data-barang">
+        <h2>Data Inventaris Barang</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Kategori</th>
+                        <th>Jumlah</th>
+                        <th>Kondisi</th>
+                        <th>Harga Satuan</th>
+                        <th>Total Harga</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php if (count($dataBarang) > 0): ?>
+
+                        <?php $no = 1; ?>
+
+                        <?php foreach ($dataBarang as $barang): ?>
 
                             <tr>
-                                <td><?= aman($hasilInput["kode"]) ?></td>
-                                <td><?= aman($hasilInput["nama"]) ?></td>
-                                <td><?= aman($hasilInput["kategori"]) ?></td>
-                                <td><?= aman($hasilInput["jumlah"]) ?></td>
-                                <td><?= rupiah($hasilInput["harga"]) ?></td>
-                                <td><?= aman($hasilInput["kondisi"]) ?></td>
+                                <td><?= $no++; ?></td>
+
                                 <td>
-                                    <strong>
-                                        <?= rupiah($hasilInput["total"]) ?>
-                                    </strong>
+                                    <?= aman($barang["kode_barang"]); ?>
+                                </td>
+
+                                <td>
+                                    <?= aman($barang["nama_barang"]); ?>
+                                </td>
+
+                                <td>
+                                    <?= aman($barang["nama_kategori"] ?? "Kategori belum tersedia"); ?>
+                                </td>
+
+                                <td>
+                                    <?= aman($barang["jumlah"]); ?>
+                                </td>
+
+                                <td>
+                                    <?= aman($barang["kondisi"]); ?>
+                                </td>
+
+                                <td>
+                                    <?= rupiah($barang["harga_satuan"]); ?>
+                                </td>
+
+                                <td>
+                                    <?= rupiah($barang["jumlah"] * $barang["harga_satuan"]); ?>
                                 </td>
                             </tr>
 
-                        </tbody>
+                        <?php endforeach; ?>
 
-                    </table>
+                    <?php else: ?>
 
-                </div>
+                        <tr>
+                            <td colspan="8">Belum ada data barang.</td>
+                        </tr>
 
-                <!-- TOTAL NILAI ASET -->
-                <div class="total-aset">
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-                    <p>Total Estimasi Nilai Aset</p>
+    <section>
+        <h2>Contoh Penerapan OOP PHP</h2>
 
-                    <h3>
-                        <?= rupiah($hasilInput["total"]) ?>
-                    </h3>
+        <?= $objekBarang->tampilkanInformasi(); ?>
+    </section>
 
-                </div>
+</main>
 
-            <?php else: ?>
+<footer>
+    <p>&copy; <?= date("Y"); ?> SIM-Barang | Sistem Informasi Manajemen Barang</p>
+</footer>
 
-                <p class="belum-ada-data">
-                    Belum ada data barang yang diproses.
-                    Silakan isi formulir input barang terlebih dahulu.
-                </p>
-
-            <?php endif; ?>
-
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-
-        <p>
-            &copy; 2026 SIM-Barang |
-            Sistem Informasi Inventaris
-        </p>
-
-    </footer>
-
-    <!-- JAVASCRIPT EKSTERNAL -->
-    <script src="main.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
