@@ -73,3 +73,94 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('modalEditUser');
+        if (!modal) return;
+        modal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            if (!button) return;
+            document.getElementById('edit_user_id').value = button.getAttribute('data-id') || '';
+            document.getElementById('edit_user_nama').value = button.getAttribute('data-nama') || '';
+            document.getElementById('edit_user_username').value = button.getAttribute('data-username') || '';
+            document.getElementById('edit_user_role').value = button.getAttribute('data-role') || 'User';
+            document.getElementById('edit_user_password').value = '';
+        });
+    });
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('modalEditKategori');
+    if (!modal) return;
+
+    modal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        if (!button) return;
+        document.getElementById('edit_id_kategori').value = button.getAttribute('data-id') || '';
+        document.getElementById('edit_nama_kategori').value = button.getAttribute('data-nama') || '';
+        document.getElementById('edit_keterangan_kategori').value = button.getAttribute('data-keterangan') || '';
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('modalEditBarang');
+
+                if (modal && window.bootstrap) {
+                    bootstrap.Modal.getOrCreateInstance(modal).show();
+                }
+            });
+document.addEventListener('DOMContentLoaded', function () {
+    const modalEdit = document.getElementById('modalEditMasuk');
+    if (!modalEdit) return;
+
+    modalEdit.addEventListener('show.bs.modal', function (event) {
+        const tombol = event.relatedTarget;
+        if (!tombol) return;
+
+        document.getElementById('edit_masuk_id').value = tombol.getAttribute('data-id') || '';
+        document.getElementById('edit_masuk_barang').value = tombol.getAttribute('data-barang') || '';
+        document.getElementById('edit_masuk_jumlah').value = tombol.getAttribute('data-jumlah') || '';
+        document.getElementById('edit_masuk_tanggal').value = tombol.getAttribute('data-tanggal') || '';
+    });
+});
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('modalEditKeluar');
+    if (!modal) return;
+
+    modal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        if (!button) return;
+        document.getElementById('edit_keluar_id').value = button.getAttribute('data-id') || '';
+        document.getElementById('edit_keluar_barang').value = button.getAttribute('data-barang') || '';
+        document.getElementById('edit_keluar_jumlah').value = button.getAttribute('data-jumlah') || '';
+        document.getElementById('edit_keluar_tanggal').value = button.getAttribute('data-tanggal') || '';
+        document.getElementById('edit_keluar_keterangan').value = button.getAttribute('data-keterangan') || '';
+    });
+});
+document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.getElementById('togglePassword');
+
+            if (passwordInput && toggleButton) {
+                toggleButton.addEventListener('click', function () {
+                    const isPassword =
+                        passwordInput.type === 'password';
+
+                    passwordInput.type = isPassword
+                        ? 'text'
+                        : 'password';
+
+                    toggleButton.textContent = isPassword
+                        ? 'Sembunyikan'
+                        : 'Lihat';
+
+                    toggleButton.setAttribute(
+                        'aria-pressed',
+                        String(isPassword)
+                    );
+
+                    toggleButton.setAttribute(
+                        'aria-label',
+                        isPassword
+                            ? 'Sembunyikan password'
+                            : 'Tampilkan password'
+                    );
+                });
+            }
+        });

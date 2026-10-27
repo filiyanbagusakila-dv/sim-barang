@@ -195,18 +195,4 @@ $status = $_GET['status'] ?? '';
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('modalEditUser');
-        if (!modal) return;
-        modal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            if (!button) return;
-            document.getElementById('edit_user_id').value = button.getAttribute('data-id') || '';
-            document.getElementById('edit_user_nama').value = button.getAttribute('data-nama') || '';
-            document.getElementById('edit_user_username').value = button.getAttribute('data-username') || '';
-            document.getElementById('edit_user_role').value = button.getAttribute('data-role') || 'User';
-            document.getElementById('edit_user_password').value = '';
-        });
-    });
-</script>
+<script src="../main.js"></script>

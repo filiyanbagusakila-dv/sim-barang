@@ -206,19 +206,4 @@ $status = $_GET['status'] ?? '';
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('modalEditKeluar');
-    if (!modal) return;
-
-    modal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        if (!button) return;
-        document.getElementById('edit_keluar_id').value = button.getAttribute('data-id') || '';
-        document.getElementById('edit_keluar_barang').value = button.getAttribute('data-barang') || '';
-        document.getElementById('edit_keluar_jumlah').value = button.getAttribute('data-jumlah') || '';
-        document.getElementById('edit_keluar_tanggal').value = button.getAttribute('data-tanggal') || '';
-        document.getElementById('edit_keluar_keterangan').value = button.getAttribute('data-keterangan') || '';
-    });
-});
-</script>
+<script src="../main.js"></script>

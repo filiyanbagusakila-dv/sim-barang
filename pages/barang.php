@@ -555,15 +555,7 @@ foreach ($dataBarang as $barang) {
             </div>
         </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const modal = document.getElementById('modalEditBarang');
-
-                if (modal && window.bootstrap) {
-                    bootstrap.Modal.getOrCreateInstance(modal).show();
-                }
-            });
-        </script>
+        <script src="../main.js"></script>
     <?php endif; ?>
 
 <?php endif; ?>

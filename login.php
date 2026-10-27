@@ -263,39 +263,5 @@ function login_h($value): string
 
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const passwordInput = document.getElementById('password');
-            const toggleButton = document.getElementById('togglePassword');
-
-            if (passwordInput && toggleButton) {
-                toggleButton.addEventListener('click', function () {
-                    const isPassword =
-                        passwordInput.type === 'password';
-
-                    passwordInput.type = isPassword
-                        ? 'text'
-                        : 'password';
-
-                    toggleButton.textContent = isPassword
-                        ? 'Sembunyikan'
-                        : 'Lihat';
-
-                    toggleButton.setAttribute(
-                        'aria-pressed',
-                        String(isPassword)
-                    );
-
-                    toggleButton.setAttribute(
-                        'aria-label',
-                        isPassword
-                            ? 'Sembunyikan password'
-                            : 'Tampilkan password'
-                    );
-                });
-            }
-        });
-    </script>
-
 </body>
 </html>

@@ -212,19 +212,5 @@ $status = $_GET['status'] ?? '';
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const modalEdit = document.getElementById('modalEditMasuk');
-    if (!modalEdit) return;
+<script src="../main.js"></script>
 
-    modalEdit.addEventListener('show.bs.modal', function (event) {
-        const tombol = event.relatedTarget;
-        if (!tombol) return;
-
-        document.getElementById('edit_masuk_id').value = tombol.getAttribute('data-id') || '';
-        document.getElementById('edit_masuk_barang').value = tombol.getAttribute('data-barang') || '';
-        document.getElementById('edit_masuk_jumlah').value = tombol.getAttribute('data-jumlah') || '';
-        document.getElementById('edit_masuk_tanggal').value = tombol.getAttribute('data-tanggal') || '';
-    });
-});
-</script>
